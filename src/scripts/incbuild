@@ -1,0 +1,26 @@
+#!/usr/bin/env node
+const fs = require('fs');
+const path = require('path');
+var UglifyJS = require("uglify-js");
+
+// Paths to relevant files
+let packagePath = path.join(__dirname, '..', 'package.json');
+let htmlPath = path.join(__dirname, '..', '..', 'public', 'index.html');
+let loaderPath = path.join(__dirname, 'loader', 'appLoader.js');
+
+// Get and incremenet the build number
+let package = JSON.parse(fs.readFileSync(packagePath, {encoding:'utf8', flag:'r'}));
+let [version, subversion, buildno] = package.version.split('.').map(n=>+n);
+buildno++; buildno = `${buildno}`.padStart(3, '0');
+package.version = `${version}.${subversion}.${buildno}`;
+fs.writeFileSync(packagePath, JSON.stringify(package, null, 2));
+
+// Incremenet the build number in the app loader script
+let html = fs.readFileSync(htmlPath, {encoding:'utf8', flag:'r'});
+let loader = fs.readFileSync(loaderPath, {encoding:'utf8', flag:'r'});
+loader = loader.replace(/assets\/js\/main\.js\?build=\d+\.\d+\.\d+/g, `assets/js/main.js?build=${package.version}`);
+
+let {code} = UglifyJS.minify(loader);
+
+html = html.replace(/<script id="app-loader">[^<]*<\/script>/, `<script id="app-loader">${code}</script>`);
+fs.writeFileSync(htmlPath, html);
