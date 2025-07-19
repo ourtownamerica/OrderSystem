@@ -1,0 +1,196 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100..900&display=swap');
+
+#main{
+	position: relative;
+	min-height: 100vh;
+	padding-bottom: 280px;
+	display: flex;
+    flex-direction: column;
+}
+
+@media (min-width: 768px) {
+	#main{
+		min-height: 100vh;
+		padding-bottom: 185px;
+	}
+}
+
+@media (max-width: 768px) {
+	.tbl-accent{
+		width: 100%;
+		text-align: center;
+		margin-left: auto !important;
+		margin-right: auto !important;
+		float: none !important;
+	}
+	.tbl-pg{
+		justify-content: center !important;
+	}
+}
+
+.offline-modal{
+	width:100vw; 
+	height: 100vh; 
+	background-color: white;
+	background-image: url('HousesBG_1024x1024.jpg');
+	background-repeat: repeat;
+	position: fixed;
+	top:0;
+	left:0;
+	right: 0;
+	bottom: 0;
+	text-align: center;
+	padding: 3em 1em;
+}
+
+.no-breaky{
+	white-space: nowrap;
+}
+
+#outletcontainer{
+	height: 100%;
+	flex: 1;
+	display: flex;
+    flex-direction: column;
+}
+
+.flex-fill-v, #sponsor-map-wrapper>div{
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	flex: 1;
+	width: 100%;
+}
+
+.input-gp-short{
+	width: 100%;
+	max-width: 300px;
+}
+
+h1, h2, h3, h4, h5{
+	font-family: "Roboto Slab", serif;
+	color: #066251;
+}
+
+h5{
+	color: #8f0222;
+}
+
+.med {
+	font-size: 1.1em;
+}
+
+.sm {
+  font-size: 0.9em;
+}
+
+.otablue {
+  color: #185a8b;
+}
+
+a{
+	text-decoration: none;
+}
+
+.card-header, .accordion-button{
+	background-image: url('HousesBG_1024x1024.jpg');
+	background-repeat: repeat;
+}
+
+.top-navbar{
+  background-image: url('HousesBG_1024x1024.jpg');
+  background-repeat: repeat;
+  border-bottom: 1px solid #ccc;
+}
+
+.footer{
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  padding: 5px 0px 5px 0px;
+  background-image: url('HousesBG_1024x1024.jpg');
+  background-repeat: repeat;
+  border-top: 1px solid #ccc;
+}
+
+.form-signin, .form-signup {
+  width: 100%;
+  max-width: 330px;
+  padding: 15px;
+  margin: 2em auto auto auto;
+}
+
+.form-signin .checkbox {
+  font-weight: 400;
+}
+
+.form-signin .form-floating:focus-within, 
+.form-signup .form-floating:focus-within  {
+  z-index: 2;
+}
+
+.form-signin input[type="text"], .form-signin input[type="email"] {
+	margin-bottom: -1px;
+	border-bottom-right-radius: 0;
+	border-bottom-left-radius: 0;
+}
+
+.form-signin input[type="password"] {
+  margin-bottom: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+a.disabled {
+	pointer-events: none;
+	cursor: default;
+}
+
+.card.cardtable{
+  border-collapse: separate;
+  border-spacing: 0;
+  border: 0;
+}
+
+.card.cardtable .d-table-row .d-table-cell{
+  border: 0;
+  border-right: 1px solid rgba(0,0,0,0.175);
+  border-bottom: 1px solid rgba(0,0,0,0.175);
+}
+
+.card.cardtable .d-table-row .d-table-cell:first-child{
+  border-left: 1px solid rgba(0,0,0,0.175);
+}
+
+.card.cardtable .d-table-row:first-child .d-table-cell{
+  border-top: 1px solid rgba(0,0,0,0.175);
+}
+
+/* top-left border-radius */
+.card.cardtable .d-table-row:first-child .d-table-cell:first-child {
+  border-top-left-radius: 0.375rem;
+}
+
+/* top-right border-radius */
+.card.cardtable .d-table-row:first-child .d-table-cell:last-child {
+  border-top-right-radius: 0.375rem;
+}
+
+/* bottom-left border-radius */
+.card.cardtable .d-table-row:last-child .d-table-cell:first-child {
+  border-bottom-left-radius: 0.375rem;
+}
+
+/* bottom-right border-radius */
+.card.cardtable .d-table-row:last-child .d-table-cell:last-child {
+  border-bottom-right-radius: 0.375rem;
+}
+
+.help-content img{
+	max-width: 100%;
+	height: auto; 
+}
+
+.small-main-logo{
+	max-width: 100px;
+}
