@@ -236,13 +236,18 @@ export default function ForgotPW(){
 		);
 	}
 
+	let navbar_logo = appProvider.getProp('vanity_logo');
+	let logo_url = navbar_logo 
+		? `https://rockwell.ourtownamerica.com/intra/api/ordersys/serve-logo.php?img=${navbar_logo}&_=${new Date().getTime()}` 
+		: `${base_url}assets/img/ot_house.png`;
+
 	return (
 		<Page>
 			<main className="form-signup text-center">
-				<img className="mb-4 img-fluid" src={`${base_url}assets/img/ot_house.png`} />
+				<img className="mb-4 img-fluid" src={logo_url} />
 				{body}
 				<button className="w-100 btn btn-lg btn-outline-primary mt-3" type="button" onClick={e=>nav(e,'/login')}>Sign In</button>
-				<button className="w-100 btn btn-lg btn-outline-primary mt-1" type="button" onClick={e=>nav(e,'/signup')}>Sign up</button>
+				{appProvider.canHaveSubs() && <button className="w-100 btn btn-lg btn-outline-primary mt-1" type="button" onClick={e=>nav(e,'/signup')}>Sign up</button>}
 			</main>
 		</Page>
 	);

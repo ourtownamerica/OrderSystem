@@ -16,6 +16,7 @@ import AppProvider from "./provider/AppProvider.jsx";
 import Footer from './components/Footer.jsx';
 import HelpCategory from './routes/HelpCategory.jsx';
 import HelpTopic from './routes/HelpTopic.jsx';
+import C from './routes/C.jsx';
 
 import './css/bootstrap.min.css';
 import './css/common.css';
@@ -29,6 +30,7 @@ function AppRoutes() {
 	return (<Routes>
 		<Route path="/" element={<App />} location={location} key={location.key}>
 			<Route path="/" element={<Home />} />
+			<Route path="/c/:slugOrId" element={<C />} />
 			<Route path="/login" element={<Login />} />
 			<Route path="/help" element={<Help />} />
 			<Route path="/helpcategory/:slugOrId" element={<HelpCategory />} />

@@ -76,10 +76,15 @@ export default function Login(){
 		setCapSuccess(false);
 	};
 
+	let navbar_logo = appProvider.getProp('vanity_logo');
+	let logo_url = navbar_logo 
+		? `https://rockwell.ourtownamerica.com/intra/api/ordersys/serve-logo.php?img=${navbar_logo}&_=${new Date().getTime()}` 
+		: `${base_url}assets/img/ot_house.png`;
+
 	return (<Page>
 		<main className="form-signin text-center">
 			<form onSubmit={doSignIn}>
-				<img className="mb-4 img-fluid" src={`${base_url}assets/img/ot_house.png`} />
+				<img className="mb-4 img-fluid" src={logo_url} />
 
 				<p><b>Sign In</b></p>
 
@@ -103,7 +108,7 @@ export default function Login(){
 				<ReCAPTCHA sitekey={google_recaptcha_key} onChange={onCaptchaSuccess} onErrored={onCaptchaError} onExpired={onCaptchaExpired} />
 				<button className="w-100 btn btn-lg btn-primary mt-1" type="submit" disabled={loading}>{loading ? <FontAwesomeIcon icon={faSpinner} className="fa-spin-pulse" /> : `Sign in`}</button>
 				<button className="w-100 btn btn-lg btn-outline-primary mt-3" type="button" onClick={e=>nav(e,'/forgotpw')}>Forgot Password</button>
-				<button className="w-100 btn btn-lg btn-outline-primary mt-1" type="button" onClick={e=>nav(e,'/signup')}>Sign up</button>
+				{appProvider.canHaveSubs() && <button className="w-100 btn btn-lg btn-outline-primary mt-1" type="button" onClick={e=>nav(e,'/signup')}>Sign up</button>}
 				
 			</form>
 		</main>

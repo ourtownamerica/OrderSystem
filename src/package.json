@@ -1,7 +1,7 @@
 {
   "name": "com.ourtownamerica.ordersys",
   "displayName": "Our Town America Order System",
-  "version": "1.0.098",
+  "version": "1.0.117",
   "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

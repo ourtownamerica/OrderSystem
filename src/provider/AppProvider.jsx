@@ -96,6 +96,21 @@ export default class AppProvider{
 		this.#events.emit("loadEnd", event);
 	}
 
+	async canHaveSubs(){
+		if(!this.#session.hasOwnProperty('vanity_subs')) return true;
+		return !!this.#session.vanity_subs;
+	}
+
+	async setVanity(slugorid){
+		let res = await this.#api('getvanity', {slugorid});
+		this.#setProps({
+			vanity_logo: res.logo,
+			vanity_name: res.company_name,
+			vanity_uid: res.jps_user_id,
+			vanity_subs: res.subaccounts_allowed
+		});
+	}
+
 	async updateProfile(jps_username, first_name, last_name, slug, job_title, company_name, address1, address2, city, state, zip){
 		let loadId = ++this.#loadCount;
 		let event = {action: 'updateprofile', message: "Updating user details", loadId};
@@ -202,7 +217,8 @@ export default class AppProvider{
 				"lastname": lastname,
 				"phone": phone,
 				"company": company,
-				"title": title
+				"title": title,
+				"parent_id": this.#session.hasOwnProperty('vanity_uid') ? this.#session.vanity_uid : null
 			});
 			event.message = `Created account!`;
 			this.#events.emit("loadEnd", event);

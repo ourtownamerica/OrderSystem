@@ -57,8 +57,10 @@ export default function Profile(){
 	const updateUser = async e => {
 		e.preventDefault();
 		if(loading) return;
+		setErrorMsg(null);
+		setSuccessMsg(null);
 		try{
-			await appProvider.updateProfile(username, firstname, lastname, email, slug, title, company, address1, address2, city, state, zip);
+			await appProvider.updateProfile(username, firstname, lastname, slug, title, company, address1, address2, city, state, zip);
 			setSuccessMsg('Account updated! ');
 		}catch(e){
 			setErrorMsg(e);
@@ -67,7 +69,7 @@ export default function Profile(){
 	};
 
 	const sanitizeSlug = slug => {
-		slug = slug.trim();
+		slug = slug.toLowerCase();
 		slug = slug.replace(/\s+/g, ' ');
 		slug = slug.replace(/ /g, '-');
 		slug = slug.replace(/[^a-zA-Z0-9_-]/g, '');
@@ -113,7 +115,7 @@ export default function Profile(){
 					<h4 className='mt-3'>Vanity URL</h4>
 					<div className="mb-3">
 						<div className="input-group">
-							<span className="input-group-text">{base_url}</span>
+							<span className="input-group-text">{base_url}c/</span>
 							<input type="text" className="form-control" value={slug} onChange={e => sanitizeSlug(e.target.value)} disabled={loading} />
 						</div>
 						<div className="form-text">This custom URL will display your logo and company name and can be used to login to your account or your child accounts.</div>

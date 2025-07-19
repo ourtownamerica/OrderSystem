@@ -106,11 +106,20 @@ export default function Navbar(){
 		</ul>
 	</li>);
 	
+	let navbar_logo = appProvider.getProp('vanity_logo');
+	let navbar_name = appProvider.getProp('vanity_name') ?? '';
+
+	let logo_url = navbar_logo 
+		? `https://rockwell.ourtownamerica.com/intra/api/ordersys/serve-logo.php?img=${navbar_logo}&_=${new Date().getTime()}` 
+		: `${base_url}assets/img/new_logo_text.png`;
+
+	let navbar_brand = (<a className="navbar-brand" href="#" onClick={e=>nav(e, '/')}>
+		<img src={logo_url} height="30" className="d-inline-block align-text-top" />{navbar_name ? ` ${navbar_name}` : ''}
+	</a>);
+
 	return (<nav className="navbar navbar-expand-lg bg-light top-navbar">
 		<div className="container">
-		  <a className="navbar-brand" href="#" onClick={e=>nav(e, '/')}>
-		  	<img src={`${base_url}assets/img/new_logo_text.png`} height="30" className="d-inline-block align-text-top" />
-		  </a>
+		  {navbar_brand}
 		  <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target={`#${navId}`}>
 			<span className="navbar-toggler-icon" />
 		  </button>

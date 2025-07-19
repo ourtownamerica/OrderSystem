@@ -55,9 +55,14 @@ export default function VerifyEmail(){
 		navigate(path);
 	};
 
+	let navbar_logo = appProvider.getProp('vanity_logo');
+	let logo_url = navbar_logo 
+		? `https://rockwell.ourtownamerica.com/intra/api/ordersys/serve-logo.php?img=${navbar_logo}&_=${new Date().getTime()}` 
+		: `${base_url}assets/img/ot_house.png`;
+
 	return (<Page>
 		<main className="form-signup">
-			<img className="mb-2 img-fluid d-block mx-auto small-main-logo" src={`${base_url}assets/img/ot_house.png`} />
+			<img className="mb-2 img-fluid d-block mx-auto small-main-logo" src={logo_url} />
 
 			<p className='text-center'><b>Active your Account</b></p>
 
