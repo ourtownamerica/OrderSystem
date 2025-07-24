@@ -66,6 +66,8 @@ export default function Navbar(){
 			</ul>
 		</li>);
 
+		/*
+		
 		navbarButtons.push(<li className="nav-item" key='/templates'>
 			<a href="#" onClick={e=>nav(e, '/templates')} className={`nav-link ${location.pathname == '/templates' ? 'active' : ''}`} {...(location.pathname == '/' && {"aria-current":"page"})}>
 				<FontAwesomeIcon icon={faStamp} /> Templates
@@ -77,6 +79,8 @@ export default function Navbar(){
 				<FontAwesomeIcon icon={faTable} /> Reports
 			</a>
 		</li>);
+
+		*/
 	}
 
 	navbarButtons.push(<li className="nav-item dropdown" key='/user'>

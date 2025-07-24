@@ -209,3 +209,12 @@ a.disabled {
 	background-color: #fff;
 	z-index: 9999;
 }
+
+.line-item-container {
+	border-bottom: 1px solid transparent;
+}
+
+.dotted-line {
+	border-bottom: 1px dotted #999;
+	flex-grow: 1;
+}

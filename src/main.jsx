@@ -24,6 +24,7 @@ import { ToastContainer } from 'react-toastify';
 import LocationProvider from './provider/LocationProvider.jsx';
 import VerifyEmail from './routes/VerifyEmail.jsx';
 import Profile from './routes/Profile.jsx';
+import NewOrder from './routes/NewOrder.jsx';
 
 function AppRoutes() {
 	const location = useLocation();
@@ -39,6 +40,7 @@ function AppRoutes() {
 			<Route path="/signup" element={<SignUp />} />
 			<Route path="/verifyemail" element={<VerifyEmail />} />
 			<Route path="/profile" element={<Profile />} />
+			<Route path="/neworder" element={<NewOrder />} />
 			<Route path="*" element={<NotFound />} />
 		</Route>
 	</Routes>);

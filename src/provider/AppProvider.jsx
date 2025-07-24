@@ -70,7 +70,7 @@ export default class AppProvider{
 		return this.#session?.session_id != null && this.#session?.email_verified;
 	}
 
-	async uploadLogo(blob){
+	async uploadLogo(blob, accountid=null){
 		let loadId = ++this.#loadCount;
 		let event = {action: 'uploadlogo', message: "Uploading logo", loadId};
 		this.#events.emit("loadStart", event);
@@ -78,6 +78,7 @@ export default class AppProvider{
 		const formData = new FormData();
 		formData.append('logo', blob);
 		formData.append('token', token);
+		if(accountid) formData.append('accountid', accountid);
 		const response = await fetch(`https://rockwell.ourtownamerica.com/intra/api/ordersys/upload-logo.php`, {
 			method: 'POST',
 			body: formData
@@ -109,6 +110,38 @@ export default class AppProvider{
 			vanity_uid: res.jps_user_id,
 			vanity_subs: res.subaccounts_allowed
 		});
+	}
+
+	async territorySearch(address, radius){
+		let loadId = ++this.#loadCount;
+		let event = {action: 'territorysearch', message: "Searching territories", loadId};
+		try{
+			this.#events.emit("loadStart", event);
+			let data = await this.#api('territorysearch', {address, radius});
+			event.message = `Data gathered.`;
+			this.#events.emit("loadEnd", event);
+			return data;
+		}catch(e){
+			event.message = `Error gathering data.`;
+			this.#events.emit("loadError", event);
+			throw e.message || e;
+		}
+	}
+
+	async createPaymentAcct(fname, lname, address, city, state, zip, card, exp, cvv){
+		let loadId = ++this.#loadCount;
+		let event = {action: 'createpmtacct', message: "Creating Payment Account", loadId};
+		try{
+			this.#events.emit("loadStart", event);
+			let data = await this.#api('createpmtacct', {fname, lname, address, city, state, zip, card, exp, cvv});
+			event.message = `Payment Method Saved`;
+			this.#events.emit("loadEnd", event);
+			return data;
+		}catch(e){
+			event.message = `Error Saving Payment Method.`;
+			this.#events.emit("loadError", event);
+			throw e.message || e;
+		}
 	}
 
 	async updateProfile(jps_username, first_name, last_name, slug, job_title, company_name, address1, address2, city, state, zip){
@@ -323,6 +356,60 @@ export default class AppProvider{
 		localStorage.setItem('ossession', '{}');
 		this.#session = {};
 		this.#caches = {};
+	}
+
+	async getAccountDetails(accountid){
+		let loadId = ++this.#loadCount;
+		let event = {action: 'getaccountdetails', message: "Getting account", loadId};
+		try{
+			this.#events.emit("loadStart", event);
+			let res = await this.#api('getaccountdetails', {
+				"accountid": accountid
+			});
+			event.message = `Data gathered`;
+			this.#events.emit("loadEnd", event);
+			return res;
+		}catch(e){
+			event.message = `Could not load account.`;
+			this.#events.emit("loadError", event);
+			throw e.message || e;
+		}
+	}
+
+	async createSubAccount(firstname, lastname, email, title, company, address1, address2, city, state, zip, username, password, canHaveSubs){
+		let loadId = ++this.#loadCount;
+		let event = {action: 'createsubacct', message: "Creating sub-account.", loadId};
+		try{
+			this.#events.emit("loadStart", event);
+			let res = await this.#api('createsubacct', {
+				firstname, lastname, email, title, company, address1, address2, city, state, zip, username, password, canHaveSubs
+			});
+			event.message = `Account created`;
+			this.#events.emit("loadEnd", event);
+			return res;
+		}catch(e){
+			event.message = `Could not create account.`;
+			this.#events.emit("loadError", event);
+			throw e.message || e;
+		}
+	}
+
+	async updateSubAccount(accountId, firstname, lastname, email, title, company, address1, address2, city, state, zip, username, password, canHaveSubs){
+		let loadId = ++this.#loadCount;
+		let event = {action: 'updatesubacct', message: "Updating sub-account.", loadId};
+		try{
+			this.#events.emit("loadStart", event);
+			let res = await this.#api('updatesubacct', {
+				accountId, firstname, lastname, email, title, company, address1, address2, city, state, zip, username, password, canHaveSubs
+			});
+			event.message = `Account updated`;
+			this.#events.emit("loadEnd", event);
+			return res;
+		}catch(e){
+			event.message = `Could not update account.`;
+			this.#events.emit("loadError", event);
+			throw e.message || e;
+		}
 	}
 
 	async #api(action, params={}){
