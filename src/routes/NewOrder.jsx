@@ -22,27 +22,35 @@ export default function NewOrder(){
 	/**************************************************************************************
 	 *** STATE VALUES *********************************************************************
 	 **************************************************************************************/
+	
+	// page states
 	const [errorMsg, setErrorMsg] = useState('');
+	const [mapUrl, setMapUrl] = useState(null);
+	const [submitting, setSubmitting] = useState(false);
+
+	// modal states
 	const [showCreateAcctModal, setShowCreateAcctModal] = useState(false);
 	const [showEditAcctModal, setShowEditAcctModal] = useState(false);
 	const [showCreatePaymentModal, setShowCreatePaymentModal] = useState(false);
 	const [showTOCModal, setShowTOCModal] = useState(false);
 
+	// territory selector states
 	const [shownTerritory, setShownTerritory] = useState(false);
 	const [checkedTerritories, setCheckedTerritories] = useState([]);
+
+	// order input states
 	const [targetIndustry, setTargetIndustry] = useState(null);
 	const [productType, setProductType] = useState('');
 	const [territories, setTerritories] = useState([]);
 	const [targetAccount, setTargetAccount] = useState(null);
 	const [paymentMethod, setPaymentMethod] = useState(null);
-
-	const [agreeTOC, setAgreeTOC] = useState(false);
-
-	// Add-ons
 	const [sfdu, setSfdu] = useState(false);
 	const [guestList, setGuestList] = useState(false);
 	const [termMonths, setTermMonths] = useState('');
 	const [startDate, setStartDate] = useState('');
+
+	// terms and conditions checkbox state
+	const [agreeTOC, setAgreeTOC] = useState(false);
 
 	/**************************************************************************************
 	 *** REF CALLBACKS ********************************************************************
@@ -54,6 +62,25 @@ export default function NewOrder(){
 			});
 		}
 	});
+
+	/**************************************************************************************
+	 *** MAP IFRAME URL *******************************************************************
+	 **************************************************************************************/
+	useEffect(()=>{
+		if(!territories?.length){
+			setMapUrl(null);
+		}else{
+			let nextUrl = `https://rockwell.ourtownamerica.com/intra/simple-map/?passthru=combined&${territories.map(territory=>{
+				if(territory.crrt.toLowerCase() === 'all'){
+					return `zips[]=${encodeURIComponent(territory.zip)}`
+				}else{
+					return `routes[]=${encodeURIComponent(`${territory.zip}-${territory.crrt}`)}`
+				}
+			}).join('&')}`;
+
+			setMapUrl(nextUrl);
+		}
+	}, [territories]);
 
 	/**************************************************************************************
 	 *** ENFORCE LOGIN ********************************************************************
@@ -127,6 +154,26 @@ export default function NewOrder(){
 			setErrorMsg("You must agree to the Terms and Conditions!");
 			return;
 		}
+
+		try{
+			setSubmitting(true);
+			let order_id = await appProvider.submitOrder(
+				productType,
+				sfdu,
+				targetIndustry.text, 
+				territories.map(t=>({zip:t.zip, crrt:t.crrt, mailings: sfdu ? parseFloat(t.sfdu_avail_avg) : parseFloat(t.avail_avg)})),
+				targetAccount.jps_user_id,
+				paymentMethod.id,
+				guestList,
+				termMonths,
+				startDate
+			);
+			setSubmitting(false);
+			navigate(`/order/${order_id}`);
+		}catch(e){
+			setErrorMsg(e);
+			setSubmitting(false);
+		}
 	};
 
 	/**************************************************************************************
@@ -185,15 +232,14 @@ export default function NewOrder(){
 			lineItems.push({label, text, terr_total});
 		}
 		lineItemsDisplay = <div>
-			{lineItems.map(({label, text, terr_total}, idx)=><div key={idx}>
+			{lineItems.map(({label, text, terr_total}, idx)=><div key={idx} className='mb-3'>
 				<div className="line-item-container d-flex align-items-end">
 					<span className="line-item-text me-2">{label}</span>
 					<div className="dotted-line flex-grow-1"></div>
 					<span className="line-item-amount ms-2">{format(terr_total)}</span>
 				</div>
-				<small className='text-secondary mb-3'>{text}</small>
+				<small className='text-secondary'>{text}</small>
 			</div>)}
-			<hr />
 			<div className="line-item-container d-flex align-items-end">
 				<span className="line-item-text me-2">Total Estimated Charges</span>
 				<div className="dotted-line flex-grow-1"></div>
@@ -203,7 +249,7 @@ export default function NewOrder(){
 	}
 
 	/**************************************************************************************
-	 *** JSX: ACCOUT SECTION **************************************************************
+	 *** JSX: ACCOUNT SECTION *************************************************************
 	 **************************************************************************************/
 	let accountDisplay;
 	let accountCols = {"first_name":"First Name","last_name":"Last Name","company_name":"Company","email":"Email","phone":"Phone","address1":"Address","address2":"Suite/Unit","city":"City","state":"State","zip":"Zip"};
@@ -426,6 +472,8 @@ export default function NewOrder(){
 			<div className="card-body">
 				<TerritoryChooser onAddTerritories={t=>setTerritories([...territories, ...t])} />
 
+				{mapUrl && <iframe className='img-thumbnail' style={{width:'100%', height:'468px'}} seamless="seamless" frameBorder="0" allowtransparency="true" scrolling="no" src={mapUrl} />}
+
 				{deleteCheckedButton}
 				<div className="accordion" id="TerritoryDataDisplayAccordion" ref={accordionRef}>
 					{territories.map(terr=>{ 
@@ -533,7 +581,7 @@ export default function NewOrder(){
 			{showTOCModal && <Alert title='Terms & Conditions' onClose={()=>setShowTOCModal(false)}><TermsAndConditions /></Alert>}
 		</div>
 
-		<button className='mt-3 btn btn-primary' onClick={placeOrder}>Place Order</button>
+		<button className='mt-3 btn btn-primary' onClick={placeOrder} disabled={submitting}>{submitting ? 'Placing order...' : 'Place Order'}</button>
 		{errorMsg && <Alert title='Error' onClose={()=>setErrorMsg('')}><div className='alert alert-danger'>{errorMsg}</div></Alert>}
 	</Page>);
 }

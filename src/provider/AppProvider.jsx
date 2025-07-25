@@ -112,6 +112,22 @@ export default class AppProvider{
 		});
 	}
 
+	async submitOrder(productCode, sfduOnly, targetIndustry, territoriesObj, targetUserId, paymentMethodId, guestList, termMonths, startDate){
+		let loadId = ++this.#loadCount;
+		let event = {action: 'neworder', message: "Submitting order", loadId};
+		try{
+			this.#events.emit("loadStart", event);
+			let data = await this.#api('neworder', {productCode, sfduOnly, targetIndustry, territoriesObj, targetUserId, paymentMethodId, guestList, termMonths, startDate});
+			event.message = `Order submitted.`;
+			this.#events.emit("loadEnd", event);
+			return data;
+		}catch(e){
+			event.message = `Error submitting order.`;
+			this.#events.emit("loadError", event);
+			throw e.message || e;
+		}
+	}
+
 	async territorySearch(address, radius){
 		let loadId = ++this.#loadCount;
 		let event = {action: 'territorysearch', message: "Searching territories", loadId};

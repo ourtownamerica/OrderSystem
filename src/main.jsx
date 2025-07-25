@@ -25,6 +25,7 @@ import LocationProvider from './provider/LocationProvider.jsx';
 import VerifyEmail from './routes/VerifyEmail.jsx';
 import Profile from './routes/Profile.jsx';
 import NewOrder from './routes/NewOrder.jsx';
+import Order from './routes/Order.jsx';
 
 function AppRoutes() {
 	const location = useLocation();
@@ -41,6 +42,7 @@ function AppRoutes() {
 			<Route path="/verifyemail" element={<VerifyEmail />} />
 			<Route path="/profile" element={<Profile />} />
 			<Route path="/neworder" element={<NewOrder />} />
+			<Route path="/order/:orderId" element={<Order />} />
 			<Route path="*" element={<NotFound />} />
 		</Route>
 	</Routes>);
@@ -135,5 +137,3 @@ function App(){
 		<ToastContainer position="bottom-right" />
 	</AppContext.Provider>
 }
-
-
